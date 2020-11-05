@@ -11,7 +11,7 @@
 #define PORT 34567
 #define ADDR "127.0.0.1"
 
-int main()
+int main(int argc, char* argv[])
 {
     pid_t pid;
     int rcvd, msg,len;
