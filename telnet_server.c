@@ -21,7 +21,7 @@ void handle_sigchld(int sig) {
 }
 
 
-int main()
+int main(int argc, char* argv[])
 {
     pid_t pid;
     int pfd[2];
