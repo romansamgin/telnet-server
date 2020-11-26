@@ -65,6 +65,7 @@ int main(int argc, char* argv[])    {
                     exit(-1);
                 }
                 else if (pid == 0) {
+                    //меняем вывод exec() с stdout в пайп pfd[1], чтобы в родителе прочитать из pfd[0]
                     close(pfd[0]);
                     close(STDOUT_FILENO);
                     close(STDERR_FILENO);
@@ -75,8 +76,10 @@ int main(int argc, char* argv[])    {
                     exit(0);
                 }
                 else if (pid > 0){
+                    //Ждем дочерний процесс, в котором был вызов exec 
                     wait(NULL);
                     close(pfd[1]);
+                    //Читаем из пайпа результат запроса и посылаем в сокет клиенту 
  		            while((rcvd = read(pfd[0], buffer, BUFSIZE)) > 0){
                         send(srv_as, buffer, rcvd, MSG_NOSIGNAL);
                         memset(buffer, '\0', BUFSIZE);
@@ -88,6 +91,7 @@ int main(int argc, char* argv[])    {
             close(srv_as);
             exit(0);
         } else if (pid > 0) {
+            //Ждем дочерний процесс, чтобы не создавать зомби
             wait(NULL);
             close(srv_as);
         } else {
